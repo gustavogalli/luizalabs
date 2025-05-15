@@ -11,44 +11,40 @@ class OrderTest {
 
     @Test
     void testOrderBuilder() {
-        Long userId = 1L;
-        String userName = "Fulano da Silva";
-        Long orderId = 100L;
-        Long productId = 200L;
-        BigDecimal productValue = new BigDecimal("100.00");
-        LocalDate purchaseDate = LocalDate.of(2023, 1, 1);
-
         Order order = Order.builder()
-                .userId(userId)
-                .userName(userName)
-                .orderId(orderId)
-                .productId(productId)
-                .productValue(productValue)
-                .purchaseDate(purchaseDate)
+                .id(1L)
+                .orderId(100L)
+                .userId(1L)
+                .userName("Fulano da Silva")
+                .productId(200L)
+                .productValue(new BigDecimal("100.00"))
+                .purchaseDate(LocalDate.of(2023, 1, 1))
                 .build();
 
-        assertEquals(userId, order.getUserId());
-        assertEquals(userName, order.getUserName());
-        assertEquals(orderId, order.getOrderId());
-        assertEquals(productId, order.getProductId());
-        assertEquals(productValue, order.getProductValue());
-        assertEquals(purchaseDate, order.getPurchaseDate());
+        assertEquals(1L, order.getId());
+        assertEquals(100L, order.getOrderId());
+        assertEquals(1L, order.getUserId());
+        assertEquals("Fulano da Silva", order.getUserName());
+        assertEquals(200L, order.getProductId());
+        assertEquals(new BigDecimal("100.00"), order.getProductValue());
+        assertEquals(LocalDate.of(2023, 1, 1), order.getPurchaseDate());
     }
 
     @Test
     void testOrderSettersAndGetters() {
         Order order = new Order();
-
+        order.setId(1L);
+        order.setOrderId(100L);
         order.setUserId(1L);
         order.setUserName("Fulano da Silva");
-        order.setOrderId(100L);
         order.setProductId(200L);
         order.setProductValue(new BigDecimal("100.00"));
         order.setPurchaseDate(LocalDate.of(2023, 1, 1));
 
+        assertEquals(1L, order.getId());
+        assertEquals(100L, order.getOrderId());
         assertEquals(1L, order.getUserId());
         assertEquals("Fulano da Silva", order.getUserName());
-        assertEquals(100L, order.getOrderId());
         assertEquals(200L, order.getProductId());
         assertEquals(new BigDecimal("100.00"), order.getProductValue());
         assertEquals(LocalDate.of(2023, 1, 1), order.getPurchaseDate());
@@ -58,9 +54,10 @@ class OrderTest {
     void testOrderNoArgsConstructor() {
         Order order = new Order();
 
+        assertNull(order.getId());
+        assertNull(order.getOrderId());
         assertNull(order.getUserId());
         assertNull(order.getUserName());
-        assertNull(order.getOrderId());
         assertNull(order.getProductId());
         assertNull(order.getProductValue());
         assertNull(order.getPurchaseDate());
@@ -68,41 +65,45 @@ class OrderTest {
 
     @Test
     void testOrderAllArgsConstructor() {
-        Long userId = 1L;
-        String userName = "Fulano da Silva";
-        Long orderId = 100L;
-        Long productId = 200L;
-        BigDecimal productValue = new BigDecimal("100.00");
-        LocalDate purchaseDate = LocalDate.of(2023, 1, 1);
+        Order order = new Order(
+                1L,
+                100L,
+                1L,
+                "Fulano da Silva",
+                200L,
+                new BigDecimal("100.00"),
+                LocalDate.of(2023, 1, 1)
+        );
 
-        Order order = new Order(userId, userName, orderId, productId, productValue, purchaseDate);
-
-        assertEquals(userId, order.getUserId());
-        assertEquals(userName, order.getUserName());
-        assertEquals(orderId, order.getOrderId());
-        assertEquals(productId, order.getProductId());
-        assertEquals(productValue, order.getProductValue());
-        assertEquals(purchaseDate, order.getPurchaseDate());
+        assertEquals(1L, order.getId());
+        assertEquals(100L, order.getOrderId());
+        assertEquals(1L, order.getUserId());
+        assertEquals("Fulano da Silva", order.getUserName());
+        assertEquals(200L, order.getProductId());
+        assertEquals(new BigDecimal("100.00"), order.getProductValue());
+        assertEquals(LocalDate.of(2023, 1, 1), order.getPurchaseDate());
     }
 
     @Test
     void testOrderToString() {
-        Long userId = 1L;
-        String userName = "Fulano da Silva";
-        Long orderId = 100L;
-        Long productId = 200L;
-        BigDecimal productValue = new BigDecimal("100.00");
-        LocalDate purchaseDate = LocalDate.of(2023, 1, 1);
-
-        Order order = new Order(userId, userName, orderId, productId, productValue, purchaseDate);
+        Order order = new Order(
+                1L,
+                100L,
+                1L,
+                "Fulano da Silva",
+                200L,
+                new BigDecimal("100.00"),
+                LocalDate.of(2023, 1, 1)
+        );
 
         String orderString = order.toString();
 
-        assertTrue(orderString.contains("userId=" + userId));
-        assertTrue(orderString.contains("userName=" + userName));
-        assertTrue(orderString.contains("orderId=" + orderId));
-        assertTrue(orderString.contains("productId=" + productId));
-        assertTrue(orderString.contains("productValue=" + productValue));
-        assertTrue(orderString.contains("purchaseDate=" + purchaseDate));
+        assertTrue(orderString.contains("id=1"));
+        assertTrue(orderString.contains("orderId=100"));
+        assertTrue(orderString.contains("userId=1"));
+        assertTrue(orderString.contains("userName=Fulano da Silva"));
+        assertTrue(orderString.contains("productId=200"));
+        assertTrue(orderString.contains("productValue=100.00"));
+        assertTrue(orderString.contains("purchaseDate=2023-01-01"));
     }
 }
