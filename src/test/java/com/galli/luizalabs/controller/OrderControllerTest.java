@@ -65,7 +65,7 @@ class OrderControllerTest {
         when(orderService.getFilteredOrders(orderId, null, null, null, null, null))
                 .thenReturn(userResponses);
 
-        mockMvc.perform(get("/api/orders/orders/filter")
+        mockMvc.perform(get("/api/orders")
                         .param("orderId", "1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].userId").value(1L))
@@ -84,7 +84,7 @@ class OrderControllerTest {
         when(orderService.getFilteredOrders(orderId, LocalDate.parse(startDate), LocalDate.parse(endDate), null, null, null))
                 .thenReturn(userResponses);
 
-        mockMvc.perform(get("/api/orders/orders/filter")
+        mockMvc.perform(get("/api/orders")
                         .param("startDate", startDate)
                         .param("endDate", endDate))
                 .andExpect(status().isOk())
@@ -108,7 +108,7 @@ class OrderControllerTest {
         when(orderService.getFilteredOrders(orderId, LocalDate.parse(startDate), LocalDate.parse(endDate), username, minValue, maxValue))
                 .thenReturn(userResponses);
 
-        mockMvc.perform(get("/api/orders/orders/filter")
+        mockMvc.perform(get("/api/orders")
                         .param("orderId", "1")
                         .param("startDate", startDate)
                         .param("endDate", endDate)
