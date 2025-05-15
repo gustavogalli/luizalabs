@@ -64,7 +64,14 @@ class OrderServiceImplTest {
 
         when(orderRepository.findAll()).thenReturn(List.of(order));
 
-        List<UserResponse> responses = service.getFilteredOrders(10L, LocalDate.of(2023, 1, 1), LocalDate.of(2023, 1, 1));
+        List<UserResponse> responses = service.getFilteredOrders(
+                10L,
+                LocalDate.of(2023, 1, 1),
+                LocalDate.of(2023, 1, 1),
+                null,
+                null,
+                null
+        );
 
         assertEquals(1, responses.size());
         assertEquals(1L, responses.get(0).getUserId());
@@ -119,7 +126,7 @@ class OrderServiceImplTest {
 
         when(orderRepository.findAll()).thenReturn(List.of(order));
 
-        List<UserResponse> responses = service.getFilteredOrders(null, null, null);
+        List<UserResponse> responses = service.getFilteredOrders(null, null, null, null, null, null);
 
         assertEquals(1, responses.size());
         assertEquals("João", responses.get(0).getName());
@@ -138,7 +145,7 @@ class OrderServiceImplTest {
 
         when(orderRepository.findAll()).thenReturn(List.of(order));
 
-        List<UserResponse> responses = service.getFilteredOrders(null, LocalDate.of(2023, 7, 1), null);
+        List<UserResponse> responses = service.getFilteredOrders(null, LocalDate.of(2023, 7, 1), null, null, null, null);
 
         assertEquals(1, responses.size());
         assertEquals("Carlos", responses.get(0).getName());
@@ -157,7 +164,7 @@ class OrderServiceImplTest {
 
         when(orderRepository.findAll()).thenReturn(List.of(order));
 
-        List<UserResponse> responses = service.getFilteredOrders(null, null, LocalDate.of(2023, 6, 15));
+        List<UserResponse> responses = service.getFilteredOrders(null, null, LocalDate.of(2023, 6, 15), null, null, null);
 
         assertEquals(1, responses.size());
         assertEquals("Ana", responses.get(0).getName());

@@ -44,7 +44,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<UserResponse> getFilteredOrders(Long orderId, LocalDate startDate, LocalDate endDate) {
+    public List<UserResponse> getFilteredOrders(Long orderId, LocalDate startDate, LocalDate endDate, String username, BigDecimal minValue, BigDecimal maxValue) {
         List<Order> orders = orderRepository.findAll();
 
         return groupOrders(
@@ -58,8 +58,16 @@ public class OrderServiceImpl implements OrderService {
                                 return !line.getPurchaseDate().isBefore(startDate);
                             return !line.getPurchaseDate().isAfter(endDate);
                         })
-                        .collect(Collectors.toList())
-        );
+                        .filter(line -> username == null || line.getUserName().toLowerCase().contains(username.toLowerCase()))
+                        .filter(line -> {
+                            if (minValue == null && maxValue == null) return true;
+                            if (minValue != null && maxValue != null)
+                                return line.getProductValue().compareTo(minValue) >= 0 && line.getProductValue().compareTo(maxValue) <= 0;
+                            if (minValue != null)
+                                return line.getProductValue().compareTo(minValue) >= 0;
+                            return line.getProductValue().compareTo(maxValue) <= 0;
+                        })
+                        .collect(Collectors.toList()));
     }
 
     private Order parseLine(String line) {

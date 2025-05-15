@@ -15,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -31,13 +32,16 @@ public class OrderController {
         return ResponseEntity.ok(orderService.processFile(file));
     }
 
-    @GetMapping
-    public ResponseEntity<List<UserResponse>> getOrders(
+    @GetMapping("/orders/filter")
+    public List<UserResponse> getFilteredOrders(
             @RequestParam(required = false) Long orderId,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
+            @RequestParam(required = false) String username,
+            @RequestParam(required = false) BigDecimal minValue,
+            @RequestParam(required = false) BigDecimal maxValue
     ) {
-        return ResponseEntity.ok(orderService.getFilteredOrders(orderId, startDate, endDate));
+        return orderService.getFilteredOrders(orderId, startDate, endDate, username, minValue, maxValue);
     }
 
     @GetMapping("/download")
