@@ -32,7 +32,7 @@ public class OrderController {
         return ResponseEntity.ok(orderService.processFile(file));
     }
 
-    @GetMapping("/orders/filter")
+    @GetMapping
     public List<UserResponse> getFilteredOrders(
             @RequestParam(required = false) Long orderId,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
