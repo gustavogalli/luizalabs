@@ -11,4 +11,6 @@ public interface OrderService {
     List<UserResponse> processFile(MultipartFile file) throws IOException;
 
     List<UserResponse> getFilteredOrders(Long orderId, LocalDate startDate, LocalDate endDate);
+
+    List<UserResponse> getAllOrders();
 }

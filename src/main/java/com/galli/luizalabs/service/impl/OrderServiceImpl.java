@@ -124,4 +124,10 @@ public class OrderServiceImpl implements OrderService {
     private String formatDecimal(BigDecimal value) {
         return value.setScale(2, BigDecimal.ROUND_HALF_EVEN).toString();
     }
+
+    @Override
+    public List<UserResponse> getAllOrders() {
+        List<Order> orders = orderRepository.findAll();
+        return groupOrders(orders);
+    }
 }

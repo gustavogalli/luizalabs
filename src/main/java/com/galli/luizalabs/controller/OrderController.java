@@ -1,13 +1,19 @@
 package com.galli.luizalabs.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.galli.luizalabs.dto.UserResponse;
 import com.galli.luizalabs.service.OrderService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
@@ -18,6 +24,7 @@ import java.util.List;
 public class OrderController {
 
     private final OrderService orderService;
+    private final ObjectMapper objectMapper;
 
     @PostMapping("/upload")
     public ResponseEntity<List<UserResponse>> upload(@RequestParam MultipartFile file) throws IOException {
@@ -31,5 +38,27 @@ public class OrderController {
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate
     ) {
         return ResponseEntity.ok(orderService.getFilteredOrders(orderId, startDate, endDate));
+    }
+
+    @GetMapping("/download")
+    public ResponseEntity<FileSystemResource> downloadAsFile() {
+        try {
+            List<UserResponse> orders = orderService.getAllOrders();
+
+            File tempFile = File.createTempFile("orders", ".json");
+            tempFile.deleteOnExit();
+
+            try (FileWriter writer = new FileWriter(tempFile)) {
+                objectMapper.writerWithDefaultPrettyPrinter().writeValue(writer, orders);
+            }
+
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=orders.json")
+                    .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                    .body(new FileSystemResource(tempFile));
+
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().build();
+        }
     }
 }
