@@ -4,7 +4,9 @@ import com.galli.luizalabs.dto.OrderResponse;
 import com.galli.luizalabs.dto.ProductResponse;
 import com.galli.luizalabs.dto.UserResponse;
 import com.galli.luizalabs.model.Order;
+import com.galli.luizalabs.repository.OrderRepository;
 import com.galli.luizalabs.service.OrderService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -19,9 +21,10 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService {
 
-    List<Order> cache = new ArrayList<>();
+    private final OrderRepository orderRepository;
 
     @Override
     public List<UserResponse> processFile(MultipartFile file) {
@@ -31,7 +34,8 @@ public class OrderServiceImpl implements OrderService {
                     .map(this::parseLine)
                     .collect(Collectors.toList());
 
-            this.cache = lines;
+            orderRepository.saveAll(lines);
+
             return groupOrders(lines);
 
         } catch (Exception e) {
@@ -41,8 +45,10 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public List<UserResponse> getFilteredOrders(Long orderId, LocalDate startDate, LocalDate endDate) {
+        List<Order> orders = orderRepository.findAll();
+
         return groupOrders(
-                cache.stream()
+                orders.stream()
                         .filter(line -> orderId == null || line.getOrderId().equals(orderId))
                         .filter(line -> {
                             if (startDate == null && endDate == null) return true;
